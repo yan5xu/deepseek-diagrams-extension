@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Diagrams",
-  "description": "Render diagrams directly in ChatGPT",
+  "name": "DeepSeek Diagrams",
+  "description": "Render diagrams directly in DeepSeek",
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
@@ -10,11 +10,7 @@
   "content_scripts": [
     {
       "js": ["content.js"],
-      "matches": [
-        "https://chat.openai.com/*",
-        "https://chat.deepseek.com/*",
-        "http://localhost/*"
-      ]
+      "matches": ["https://chat.deepseek.com/*", "http://localhost/*"]
     }
   ],
   "icons": {
