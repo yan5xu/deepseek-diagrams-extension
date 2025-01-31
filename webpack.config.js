@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import CopyPlugin from "copy-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
 
 function transformManifest(buffer, mode) {
   //  Load the manifest object, update the versions, from the package.json,
@@ -82,6 +83,20 @@ export default (_, argv) => ({
   //  These hints tell webpack that we can expect much larger than usual assets
   //  and entry points (as we compile things down to a few small files, this is
   //  ok as we load the extension from disk not the web).
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          ecma: 6,
+          output: {
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
+  },
   performance: {
     maxEntrypointSize: 5 * 1024 * 1024,
     maxAssetSize: 5 * 1024 * 1024,

@@ -1,6 +1,6 @@
 {
-  "name": "chatgpt-diagrams",
-  "version": "0.1.2",
+  "name": "deepseek-diagrams",
+  "version": "0.1.3",
   "description": "Enhance the ChatGPT website to allow diagrams to be presented inline.",
   "type": "module",
   "scripts": {
@@ -53,6 +53,7 @@
     "prettier": "2.8.8",
     "rollup": "^3.20.2",
     "rollup-plugin-chrome-extension": "^3.6.12",
+    "terser-webpack-plugin": "^5.3.11",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.2",
     "tslib": "^2.5.0",

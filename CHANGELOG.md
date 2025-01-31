@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.3](https://github.com/yan5xu/deepseek-diagrams-extension/compare/v0.1.2...v0.1.3) (2024-01-31)
+
+
+### Features
+
+* 支持 DeepSeek Chat
+* 添加中文说明文档
+* 优化构建配置,减小打包体积
+
 ## [0.1.2](https://github.com/dwmkerr/chatgpt-diagrams-extension/compare/v0.1.1...v0.1.2) (2023-12-06)
 
 
