@@ -9,15 +9,20 @@ export type ChatGPTCodeDOM = {
   //  The actual code in the sample.
   code: string;
 
-  //  The overall container 'pre' tag that holds the frame, buttons and code.
+  //  The overall container div that holds the code block.
+  codeBlockElement: HTMLDivElement;
+
+  //  The banner action div where we'll insert our button.
+  actionElement: HTMLDivElement;
+
+  //  The pre element that contains the actual code.
   preElement: HTMLPreElement;
 
-  //  The 'copy code' button, we use this to quickly get a handle on the toolbar
-  //  and insert adjacent buttons.
-  copyCodeButton: HTMLButtonElement;
+  //  The copy code button element.
+  copyCodeButton: HTMLDivElement;
 
-  //  The div that contains the 'code' element with the actual code.
-  codeContainerElement: HTMLDivElement;
+  //  The container element that holds the code content.
+  codeContainerElement: HTMLPreElement;
 };
 
 /**
@@ -52,42 +57,44 @@ export function queryFindExactlyOneElement(
 }
 
 export function findCodeBlocks(document: Document): Array<ChatGPTCodeDOM> {
-  //  This function takes the containing pre tag for the code sample, and
-  //  returns the child elements we will be using to manipulate the DOM.
-  const preToDOM = (preTag: HTMLPreElement, index: number) => {
-    //  Get the 'copy code' button - I've not found a clean way to do consistently
-    //  with query selectors, so use XPath.
-    const copyCodeButton = queryFindExactlyOneElement(
-      document,
-      './/button[contains(text(), "Copy")]',
-      preTag
-    );
-    //  Get the 'code' element that has the actual mermaid code sample.
-    const codeElement = preTag.querySelector("code") as HTMLElement;
+  // 查找所有代码块容器
+  const codeBlocks = Array.from(document.querySelectorAll(".md-code-block"));
 
-    return {
-      isProcessed: preTag.classList.contains("chatgpt-diagrams-processed"),
-      index,
-      code: codeElement.textContent?.trim() || "",
-      preElement: preTag,
-      copyCodeButton: copyCodeButton as HTMLButtonElement,
-      codeContainerElement: codeElement.parentNode as HTMLDivElement,
-    };
-  };
+  return codeBlocks
+    .map((block, index) => {
+      const codeBlockElement = block as HTMLDivElement;
+      const actionElement = block.querySelector(
+        ".md-code-block-action"
+      ) as HTMLDivElement;
+      const preElement = block.querySelector("pre") as HTMLPreElement;
+      const infoElement = block.querySelector(
+        ".md-code-block-infostring"
+      ) as HTMLDivElement;
+      const copyCodeButton = block.querySelector(
+        ".ds-markdown-code-copy-button"
+      ) as HTMLDivElement;
+      const codeContainerElement = preElement;
 
-  //  Find all of the 'pre' tags, then break into the specific code dom objects.
-  const results = document.evaluate(
-    "//pre",
-    document,
-    null,
-    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
-  );
-  return Array.from(
-    {
-      length: results.snapshotLength,
-    },
-    (_, index) => results.snapshotItem(index) as HTMLPreElement
-  )
-    .map(preToDOM)
-    .filter((element) => element); // filter out null elements
+      // 如果不是 mermaid 代码块，返回 null
+      if (!infoElement?.textContent?.toLowerCase().includes("mermaid")) {
+        return null;
+      }
+
+      // 获取代码内容
+      const code = preElement?.textContent?.trim() || "";
+
+      return {
+        isProcessed: preElement.classList.contains(
+          "chatgpt-diagrams-processed"
+        ),
+        index,
+        code,
+        codeBlockElement,
+        actionElement,
+        preElement,
+        copyCodeButton,
+        codeContainerElement,
+      };
+    })
+    .filter((block): block is ChatGPTCodeDOM => block !== null);
 }

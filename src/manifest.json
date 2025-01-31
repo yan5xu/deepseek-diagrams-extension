@@ -10,7 +10,11 @@
   "content_scripts": [
     {
       "js": ["content.js"],
-      "matches": ["https://chat.openai.com/*", "http://localhost/*"]
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chat.deepseek.com/*",
+        "http://localhost/*"
+      ]
     }
   ],
   "icons": {

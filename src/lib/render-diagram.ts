@@ -13,6 +13,11 @@ export async function renderDiagram(
     // body, then remove it ourselves. This is because I cannot get it to
     //  sucessfully use the JSDOM mocked document in this case - even through
     //  when _successfully_ rendering diagrams it works.
+    // 初始化 mermaid 配置，使用暗黑主题
+    mermaid.initialize({
+      theme: "default",
+    });
+
     const { svg } = await mermaid.render(`chatgpt-diagram-${id}`, code);
     container.innerHTML = svg;
   } catch (err) {

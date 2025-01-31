@@ -3,8 +3,8 @@ import { renderDiagram } from "./render-diagram";
 
 export type PreparedCodeBlock = {
   //  The 'show diagram' button.
-  showDiagramButton: HTMLButtonElement;
-  showCodeButton: HTMLButtonElement;
+  showDiagramButton: HTMLDivElement;
+  showCodeButton: HTMLDivElement;
   diagramTabContainer: HTMLDivElement;
 };
 
@@ -16,7 +16,7 @@ export function prepareCodeBlock(
   const diagramTabContainer = document.createElement("div");
   diagramTabContainer.id = `chatgpt-diagram-container-${codeBlock.index}`;
   diagramTabContainer.classList.add("p-4", "overflow-y-auto");
-  diagramTabContainer.style.backgroundColor = "#FFFFFF";
+  diagramTabContainer.style.backgroundColor = "#FAFAFA";
   diagramTabContainer.style.display = "none";
   codeBlock.codeContainerElement.after(diagramTabContainer);
 
@@ -42,9 +42,14 @@ export function prepareCodeBlock(
   //     throw new Error(`Unknown diagram display mode '${displayMode}'`);
 
   //  Create the 'show diagram' button.
-  const showDiagramButton = document.createElement("button");
+  const showDiagramButton = document.createElement("div");
   showDiagramButton.innerText = "Show diagram";
-  showDiagramButton.classList.add("flex", "ml-auto", "gap-2");
+  showDiagramButton.style.backgroundColor = "rgba(var(--ds-rgba-transparent))";
+  showDiagramButton.style.color = "inherit";
+  showDiagramButton.style.cursor = "pointer";
+  showDiagramButton.style.border = "none";
+  showDiagramButton.style.margin = "0";
+  showDiagramButton.style.padding = "0";
   showDiagramButton.onclick = () => {
     renderDiagram(diagramTabContainer, `${codeBlock.index}`, codeBlock.code);
     codeBlock.codeContainerElement.style.display = "none";
@@ -52,12 +57,16 @@ export function prepareCodeBlock(
     showDiagramButton.style.display = "none";
     showCodeButton.style.display = "inline-block";
   };
-  codeBlock.copyCodeButton.before(showDiagramButton);
 
   //  Create the 'show code' button.
-  const showCodeButton = document.createElement("button");
+  const showCodeButton = document.createElement("div");
   showCodeButton.innerText = "Show code";
-  showCodeButton.classList.add("flex", "ml-auto", "gap-2");
+  showCodeButton.style.backgroundColor = "rgba(var(--ds-rgba-transparent))";
+  showCodeButton.style.color = "inherit";
+  showCodeButton.style.cursor = "pointer";
+  showCodeButton.style.border = "none";
+  showCodeButton.style.margin = "0";
+  showCodeButton.style.padding = "0";
   showCodeButton.style.display = "none";
   showCodeButton.onclick = () => {
     codeBlock.codeContainerElement.style.display = "block";
@@ -65,7 +74,13 @@ export function prepareCodeBlock(
     showDiagramButton.style.display = "inline-block";
     showCodeButton.style.display = "none";
   };
-  codeBlock.copyCodeButton.before(showCodeButton);
+
+  const actionContainer = document.createElement("div");
+  actionContainer.style.marginRight = "8px";
+  actionContainer.classList.add("flex", "items-center", "gap-2");
+  actionContainer.appendChild(showDiagramButton);
+  actionContainer.appendChild(showCodeButton);
+  codeBlock.actionElement.before(actionContainer);
 
   //  Add the 'chatgpt-diagrams' class to the code block - this means we will
   //  exclude it from later searches.

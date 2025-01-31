@@ -3,7 +3,7 @@
 [![main](https://github.com/dwmkerr/chatgpt-diagrams-extension/actions/workflows/main.yaml/badge.svg)](https://github.com/dwmkerr/chatgpt-diagrams-extension/actions/workflows/main.yaml)
 [![codecov](https://codecov.io/gh/dwmkerr/chatgpt-diagrams-extension/branch/main/graph/badge.svg?token=6Wj5EwCVqf)](https://codecov.io/gh/dwmkerr/chatgpt-diagrams-extension)
 
-A Chrome browser extension that renders diagrams in the ChatGPT website inline:
+A Chrome browser extension that renders diagrams in the ChatGPT and DeepSeek Chat websites inline:
 
 ![Demo Recording of ChatGPT Diagrams Extension](./docs/demo-recording.gif)
 
@@ -47,7 +47,7 @@ npm install
 npm run build
 ```
 
-Open [Chrome Extensions](chrome://extensions), choose 'Load Unpacked' and select the `./dist` folder. Now open https://chat.openai.com/ and enter a prompt such as:
+Open [Chrome Extensions](chrome://extensions), choose 'Load Unpacked' and select the `./dist` folder. Now open https://chat.openai.com/ or https://chat.deepseek.com/ and enter a prompt such as:
 
 > Use mermaid.js to create a sequence diagram showing how state can be persisted for a chrome extension, and how state can be passed between files.
 
