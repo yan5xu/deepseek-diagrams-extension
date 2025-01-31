@@ -1,3 +1,6 @@
+// 存储所有的观察器，以便在需要时断开连接
+const observers: MutationObserver[] = [];
+
 export type ChatGPTCodeDOM = {
   //  If 'true' indicates that we have already created the diagram.
   isProcessed: boolean;
@@ -59,6 +62,32 @@ export function queryFindExactlyOneElement(
   return snapshot.snapshotItem(0);
 }
 
+/**
+ * 监听代码块内容变化
+ * @param preElement pre 元素
+ * @param callback 回调函数
+ */
+function observeCodeContent(
+  preElement: HTMLPreElement,
+  callback: (mutations: MutationRecord[]) => void
+) {
+  const observer = new MutationObserver(callback);
+  observer.observe(preElement, {
+    childList: true,
+    characterData: true,
+    subtree: true,
+  });
+  return observer;
+}
+
+/**
+ * 断开所有观察器的连接
+ */
+export function disconnectAllObservers() {
+  observers.forEach((observer) => observer.disconnect());
+  observers.length = 0;
+}
+
 export function findCodeBlocks(document: Document): Array<ChatGPTCodeDOM> {
   // 查找所有代码块容器
   const codeBlocks = Array.from(document.querySelectorAll(".md-code-block"));
@@ -97,7 +126,8 @@ export function findCodeBlocks(document: Document): Array<ChatGPTCodeDOM> {
       // 获取代码内容
       const code = preElement?.textContent?.trim() || "";
 
-      return {
+      // 创建代码块对象
+      const codeBlock: ChatGPTCodeDOM = {
         isProcessed: preElement.classList.contains(
           "chatgpt-diagrams-processed"
         ),
@@ -110,6 +140,28 @@ export function findCodeBlocks(document: Document): Array<ChatGPTCodeDOM> {
         codeContainerElement,
         diagramType,
       };
+
+      // 如果是图表类型，设置内容变化监听
+      if (diagramType) {
+        observeCodeContent(preElement, (mutations) => {
+          // 检查内容是否真的发生变化
+          const newCode = preElement.textContent?.trim() || "";
+          if (newCode !== code) {
+            // 移除处理标记，允许重新处理
+            preElement.classList.remove("chatgpt-diagrams-processed");
+            codeBlock.isProcessed = false;
+            codeBlock.code = newCode;
+
+            // 移除之前添加的按钮容器
+            const actionContainer = codeBlock.codeBlockElement.querySelector(
+              ".chatgpt-diagrams-action-container"
+            );
+            actionContainer?.remove();
+          }
+        });
+      }
+
+      return codeBlock;
     })
     .filter((block): block is ChatGPTCodeDOM => block !== null);
 }

@@ -89,7 +89,12 @@ export function prepareCodeBlock(
 
   const actionContainer = document.createElement("div");
   actionContainer.style.marginRight = "8px";
-  actionContainer.classList.add("flex", "items-center", "gap-2");
+  actionContainer.classList.add(
+    "flex",
+    "items-center",
+    "gap-2",
+    "chatgpt-diagrams-action-container"
+  );
   actionContainer.appendChild(showDiagramButton);
   actionContainer.appendChild(showCodeButton);
   codeBlock.actionElement.before(actionContainer);
