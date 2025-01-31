@@ -23,6 +23,9 @@ export type ChatGPTCodeDOM = {
 
   //  The container element that holds the code content.
   codeContainerElement: HTMLPreElement;
+
+  //  The type of diagram (mermaid or plantuml)
+  diagramType: "mermaid" | "plantuml";
 };
 
 /**
@@ -75,8 +78,19 @@ export function findCodeBlocks(document: Document): Array<ChatGPTCodeDOM> {
       ) as HTMLDivElement;
       const codeContainerElement = preElement;
 
-      // 如果不是 mermaid 代码块，返回 null
-      if (!infoElement?.textContent?.toLowerCase().includes("mermaid")) {
+      // 获取代码块类型信息
+      const infoText = infoElement?.textContent?.toLowerCase() || "";
+
+      // 判断图表类型
+      let diagramType: "mermaid" | "plantuml" | null = null;
+      if (infoText.includes("mermaid")) {
+        diagramType = "mermaid";
+      } else if (infoText.includes("plantuml")) {
+        diagramType = "plantuml";
+      }
+
+      // 如果不是支持的图表类型，返回 null
+      if (!diagramType) {
         return null;
       }
 
@@ -94,6 +108,7 @@ export function findCodeBlocks(document: Document): Array<ChatGPTCodeDOM> {
         preElement,
         copyCodeButton,
         codeContainerElement,
+        diagramType,
       };
     })
     .filter((block): block is ChatGPTCodeDOM => block !== null);

@@ -53,7 +53,7 @@ describe("render-diagram", () => {
       const container = elementByTestId(document, "container");
       const code = document.querySelector("code")?.textContent || "";
 
-      await renderDiagram(container, id, code);
+      await renderDiagram(container, id, code, "mermaid");
 
       const svg = container.querySelector("svg") as SVGElement;
       expect(svg.id).toContain(`chatgpt-diagram-${id}`);
@@ -101,7 +101,7 @@ describe("render-diagram", () => {
       const container = elementByTestId(dom.window.document, "container");
       const code = dom.window.document.querySelector("code")?.textContent || "";
 
-      await renderDiagram(container, id, code);
+      await renderDiagram(container, id, code, "mermaid");
 
       expect(global.document.body.innerHTML).toEqual("");
     });
@@ -139,7 +139,7 @@ describe("render-diagram", () => {
       const container = elementByTestId(dom.window.document, "container");
       const code = dom.window.document.querySelector("code")?.textContent || "";
 
-      await renderDiagram(container, id, code);
+      await renderDiagram(container, id, code, "mermaid");
 
       //  Check for the mermaid.js error output in the container.
       expect(container.querySelector(".error-text")?.textContent).toMatch(

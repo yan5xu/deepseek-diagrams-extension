@@ -18,6 +18,13 @@ export function prepareCodeBlock(
   diagramTabContainer.classList.add("p-4", "overflow-y-auto");
   diagramTabContainer.style.backgroundColor = "#FAFAFA";
   diagramTabContainer.style.display = "none";
+
+  // 创建内部居中容器
+  const centerContainer = document.createElement("div");
+  centerContainer.style.display = "flex";
+  centerContainer.style.justifyContent = "center";
+  diagramTabContainer.appendChild(centerContainer);
+
   codeBlock.codeContainerElement.after(diagramTabContainer);
 
   // //  Create the diagram 'after code' container.
@@ -51,7 +58,12 @@ export function prepareCodeBlock(
   showDiagramButton.style.margin = "0";
   showDiagramButton.style.padding = "0";
   showDiagramButton.onclick = () => {
-    renderDiagram(diagramTabContainer, `${codeBlock.index}`, codeBlock.code);
+    renderDiagram(
+      diagramTabContainer,
+      `${codeBlock.index}`,
+      codeBlock.code,
+      codeBlock.diagramType
+    );
     codeBlock.codeContainerElement.style.display = "none";
     diagramTabContainer.style.display = "block";
     showDiagramButton.style.display = "none";
